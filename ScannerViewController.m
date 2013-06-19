@@ -7,6 +7,7 @@
 //
 
 #import "ScannerViewController.h"
+#import "MyJSON.h"
 
 @interface ScannerViewController ()
 
@@ -129,34 +130,12 @@
     NSLog(@"%@",notikumiURL);
            
     //GET http://api.notikumi.com/ticket/<localizador>.json?type=1&idevf=<ideventofecha>&key=<apikey>
-    
-//    NSURL *url = [NSURL URLWithString:notikumiURL];
-//    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
-//    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-//    [NSURLConnection
-//     sendAsynchronousRequest:urlRequest
-//     queue:queue
-//     completionHandler:^(NSURLResponse *response,
-//                         NSData *data,
-//                         NSError *error) {
-//         if ([data length] >0 &&
-//             error == nil){
-//             NSString *html = [[NSString alloc] initWithData:data
-//                                                    encoding:NSUTF8StringEncoding];
-//             NSLog(@"HTML = %@", html);
-//         }
-//         else if ([data length] == 0 &&
-//                  error == nil){
-//             NSLog(@"Nothing was downloaded.");
-//         }
-//         else if (error != nil){
-//             NSLog(@"Error happened = %@", error);
-//         }
-//     }];
-    
+        
     [self.accesoLabel setText:@"Validando..."];
     
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:notikumiURL]];    
+    //NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:notikumiURL]];
+    NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:notikumiURL]];
+    request.HTTPMethod = @"GET";
     NSURLConnection *conn;
     conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     return YES;

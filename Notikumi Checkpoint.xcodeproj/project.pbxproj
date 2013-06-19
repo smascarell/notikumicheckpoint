@@ -39,6 +39,7 @@
 		7E8D28CB165649710025F54F /* ScannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E8D28CA165649710025F54F /* ScannerViewController.m */; };
 		7EC8A8371745656900DD7680 /* QROverlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EC8A8351745656900DD7680 /* QROverlay.png */; };
 		7EC8A8381745656900DD7680 /* QROverlay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7EC8A8361745656900DD7680 /* QROverlay@2x.png */; };
+		7EEDCD1B1772121800B58E3E /* MyJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EEDCD1A1772121800B58E3E /* MyJSON.m */; };
 		7EF5F0C7167FA1F6009A2B34 /* photoShutter.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7EF5F0C6167FA1F6009A2B34 /* photoShutter.mp3 */; };
 		7EF5F0CB167FA2C1009A2B34 /* entrada_no_valida.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7EF5F0CA167FA2C1009A2B34 /* entrada_no_valida.mp3 */; };
 		7EF5F0CD167FA30A009A2B34 /* entrada_valida.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7EF5F0CC167FA30A009A2B34 /* entrada_valida.mp3 */; };
@@ -103,6 +104,8 @@
 		7E8D28CA165649710025F54F /* ScannerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScannerViewController.m; sourceTree = "<group>"; };
 		7EC8A8351745656900DD7680 /* QROverlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = QROverlay.png; sourceTree = "<group>"; };
 		7EC8A8361745656900DD7680 /* QROverlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "QROverlay@2x.png"; sourceTree = "<group>"; };
+		7EEDCD191772121800B58E3E /* MyJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyJSON.h; sourceTree = "<group>"; };
+		7EEDCD1A1772121800B58E3E /* MyJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyJSON.m; sourceTree = "<group>"; };
 		7EF5F0C6167FA1F6009A2B34 /* photoShutter.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = photoShutter.mp3; sourceTree = "<group>"; };
 		7EF5F0CA167FA2C1009A2B34 /* entrada_no_valida.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = entrada_no_valida.mp3; sourceTree = "<group>"; };
 		7EF5F0CC167FA30A009A2B34 /* entrada_valida.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = entrada_valida.mp3; sourceTree = "<group>"; };
@@ -202,6 +205,8 @@
 		7E8D289F165645250025F54F /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				7EEDCD191772121800B58E3E /* MyJSON.h */,
+				7EEDCD1A1772121800B58E3E /* MyJSON.m */,
 				7E00D28916C3B68C00BFB068 /* ListaEntradasViewController.h */,
 				7E00D28A16C3B68C00BFB068 /* ListaEntradasViewController.m */,
 				7E8D28C9165649710025F54F /* ScannerViewController.h */,
@@ -362,6 +367,7 @@
 				7E8D287B165642B30025F54F /* AppDelegate.m in Sources */,
 				7E8D28CB165649710025F54F /* ScannerViewController.m in Sources */,
 				7E00D28B16C3B68C00BFB068 /* ListaEntradasViewController.m in Sources */,
+				7EEDCD1B1772121800B58E3E /* MyJSON.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
