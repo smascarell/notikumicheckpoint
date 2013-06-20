@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
-#import "ListaEntradasViewController.h"
+#import "NKListaEntradasViewController.h"
 
 @interface ScannerViewController : UIViewController <ZBarReaderDelegate>  {
     ZBarReaderView *readerView;
@@ -19,7 +19,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *localizadorLabel;
 @property (weak, nonatomic) IBOutlet UILabel *accesoLabel;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
-
 @property (nonatomic, strong) NSMutableData *responseData;
 
 @property (nonatomic, retain) IBOutlet ZBarReaderView *readerView;
@@ -27,5 +26,7 @@
 -(BOOL) validateQR :(NSString *)data;
 - (void) limpiarAccesoLabel;
 - (void) clearLabel;
+- (IBAction)cambiarEstadoLED:(id)sender;
+- (void) setTorchOn:(BOOL)isOn;
 
 @end

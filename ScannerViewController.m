@@ -7,13 +7,17 @@
 //
 
 #import "ScannerViewController.h"
-#import "MyJSON.h"
+#import "NKJSON.h"
+#import <AVFoundation/AVFoundation.h>
+#import "AudioToolbox/AudioServices.h"
 
 @interface ScannerViewController ()
-
+    
 @end
 
 @implementation ScannerViewController
+
+    UIView * viewStatus;
 
 @synthesize responseData = _responseData;
 @synthesize readerView;
@@ -31,7 +35,6 @@
 
 - (void)viewDidLoad
 {
-    //[ZBarReaderView class];
     self.responseData = [NSMutableData data];
     [super viewDidLoad];
     self.accesoLabel.text = @"";
@@ -53,11 +56,10 @@
     UIImage *img = [UIImage imageNamed:@"QROverlay"];
     UIImageView *overlay = [[UIImageView alloc] initWithImage:img];
     
-    readerController.cameraOverlayView = overlay;
+    //readerController.cameraOverlayView = overlay;
         
     [readerView addSubview:readerController.readerView];
     [readerView addSubview:overlay];
-    
 }
 
 - (void)didReceiveMemoryWarning
@@ -126,19 +128,18 @@
     [notikumiURL appendString:[NSString stringWithFormat:@"&type=1"]];
     time_t unixTime = (time_t) [[NSDate date] timeIntervalSince1970];
     [notikumiURL appendString:[NSString stringWithFormat:@"&time=%ld",unixTime]];
-    
-    NSLog(@"%@",notikumiURL);
-           
+               
     //GET http://api.notikumi.com/ticket/<localizador>.json?type=1&idevf=<ideventofecha>&key=<apikey>
         
     [self.accesoLabel setText:@"Validando..."];
     
-    //NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:notikumiURL]];
     NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:notikumiURL]];
     request.HTTPMethod = @"GET";
-    NSURLConnection *conn;
-    conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    return YES;
+    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    if (conn) {
+        return TRUE;
+    }
+    return FALSE;
 }
 
 #pragma mark NSURLConnection
@@ -150,17 +151,14 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    [self.responseData appendData:data];
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    //[self.responseData appendData:data];
+    
     NSLog(@"Descarga de datos finalizada");
     NSLog(@"OK! %d bytes de datos recibidos",[self.responseData length]);
     
     // convert to JSON
-    NSError *myError = nil;
-    NSDictionary *res = [NSJSONSerialization JSONObjectWithData:self.responseData options:NSJSONReadingMutableLeaves error:&myError];
-        
+    NSDictionary *res = [NKJSON objectFromData:data];
+    
     NSDictionary *objectDTO = [res objectForKey:@"objectDTO"];
     BOOL errorValue = [[objectDTO objectForKey:@"error"] boolValue];
     
@@ -175,34 +173,65 @@
         NSError *error;
         audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
         [audioPlayer play];
+        [self displayViewStatus:YES];
         
     } else{
         self.accesoLabel.text = @"NO válida";
         self.accesoLabel.textColor = [UIColor redColor];
-               
+        
         NSURL *url = [[NSBundle mainBundle] URLForResource:@"entrada_no_valida" withExtension: @"mp3"];
         if (!url){NSLog(@"file not found"); return;}
         NSError *error;
         audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
         [audioPlayer play];
+        [self performSelector:@selector(vibrate) withObject:self afterDelay:0.0];
+        [self performSelector:@selector(vibrate) withObject:self afterDelay:1.0];
+        [self performSelector:@selector(vibrate) withObject:self afterDelay:2.0];
+        [self displayViewStatus:NO];
     }
-    [self limpiarAccesoLabel];
     
+    [self limpiarAccesoLabel];
 }
 
 - (void) limpiarAccesoLabel {
     [self performSelector:@selector(clearLabel) withObject:self afterDelay:3.0];
-    //[UIView animateWithDuration:1.0 animations:^{RocketMove.center = CGPointMake(100, -55);}];
 }
-
-
 
 - (void)clearLabel {
     [self.accesoLabel setText:@"Leer Entrada"];
     [self.accesoLabel setTextColor:[UIColor whiteColor]];
     [self.localizadorLabel setText:nil];
     [self.activityIndicator stopAnimating];
-    //[NSObject cancelPreviousPerformRequestsWithTarget:self];
 }
+
+-(void)vibrate {
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+}
+
+- (void) displayViewStatus:(BOOL)valid{
+    //Vista para mostrar Verde(válida) ó (Roja)inválida    
+    viewStatus = [[UIView alloc]initWithFrame:readerView.bounds];
+    (valid) ? [viewStatus setBackgroundColor:[UIColor greenColor]] :[viewStatus setBackgroundColor:[UIColor redColor]];
+    [viewStatus setAlpha:0.7f];
+    [self.view addSubview:viewStatus];
+    [self performSelector:@selector(hideView) withObject:self afterDelay:3.0];
+}
+
+-(void)hideView{
+    [viewStatus removeFromSuperview];
+}
+
+- (IBAction)cambiarEstadoLED:(id)sender {
+    UISwitch *switchValue = (UISwitch*)sender;
+    [self setTorchOn:[switchValue isOn]];
+}
+
+- (void) setTorchOn:(BOOL)isOn {
+    AVCaptureDevice* device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    [device lockForConfiguration:nil]; //you must lock before setting torch mode
+    [device setTorchMode:isOn ? AVCaptureTorchModeOn : AVCaptureTorchModeOff];
+    [device unlockForConfiguration];
+}
+
 
 @end
