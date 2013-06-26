@@ -11,8 +11,8 @@
 @interface NKListaEntradasViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITabBarDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (nonatomic, strong) NSMutableData *responseData;
+@property (nonatomic,strong) NSMutableArray *entradas;
+@property (weak, nonatomic) IBOutlet UILabel *totalLabel;
 
-- (void)descargarListado :(NSString *)ultimoKey idevf:(NSString *)idevf;
 
 @end

@@ -10,6 +10,8 @@
 #import "NKJSON.h"
 #import <AVFoundation/AVFoundation.h>
 #import "AudioToolbox/AudioServices.h"
+#import "AppDelegate.h"
+
 
 @interface ScannerViewController ()
     
@@ -17,12 +19,13 @@
 
 @implementation ScannerViewController
 
-    UIView * viewStatus;
+UIView * viewStatus;
 
 @synthesize responseData = _responseData;
-@synthesize readerView;
+@synthesize readerView = _readerView;
 @synthesize accesoLabel = _accesoLabel;
 @synthesize localizadorLabel = _localizadorLabel;
+@synthesize readerController = _readerController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -41,25 +44,22 @@
     
     // the delegate receives decode results
     
-    readerController = [ZBarReaderViewController new];
-    readerController.readerDelegate = self;
+    _readerController = [ZBarReaderViewController new];
+    _readerController.readerDelegate = self;
     
-    readerController.showsZBarControls = NO;
+    _readerController.showsZBarControls = NO;
     
-    [readerController.scanner setSymbology: ZBAR_I25
-                          config: ZBAR_CFG_ENABLE
-                              to: 0];
-    
-    
-    readerController.readerView.zoom = 0.0;
+    [_readerController.scanner setSymbology: ZBAR_I25
+                                    config: ZBAR_CFG_ENABLE
+                                        to: 0];
     
     UIImage *img = [UIImage imageNamed:@"QROverlay"];
     UIImageView *overlay = [[UIImageView alloc] initWithImage:img];
     
-    //readerController.cameraOverlayView = overlay;
-        
-    [readerView addSubview:readerController.readerView];
-    [readerView addSubview:overlay];
+    [self.view addSubview:_readerController.readerView];
+    [self.view addSubview:overlay];
+    
+    [self.view sendSubviewToBack:_readerController.readerView];
 }
 
 - (void)didReceiveMemoryWarning
@@ -70,16 +70,16 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     // Do any additional setup after loading the view.
-    [readerController.readerView start];
+    [super viewDidAppear:animated];
+    [_readerController.readerView start];
     [self.localizadorLabel setText:@""];
     [self.accesoLabel setText:@"Leer Entrada"];
-    [self.accesoLabel setTextColor:[UIColor whiteColor]];
+    [self.accesoLabel setTextColor:[UIColor blackColor]];
     [self.activityIndicator setHidesWhenStopped:YES];
         
 }
 -(void)viewWillDisappear:(BOOL)animated {
-    [readerView stop];
-    
+    [_readerController.readerView stop];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -126,6 +126,12 @@
     [notikumiURL appendString:[NSString stringWithFormat:@"&key=%@",localizador[1]]];
     [notikumiURL appendString:[NSString stringWithFormat:@"&idevf=%@",localizador[0]]];
     [notikumiURL appendString:[NSString stringWithFormat:@"&type=1"]];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+
+    NSString *clave = appDelegate.clave;
+    
+    [notikumiURL appendString:[NSString stringWithFormat:@"&checkpointInitCode=%@",clave]];
+    
     time_t unixTime = (time_t) [[NSDate date] timeIntervalSince1970];
     [notikumiURL appendString:[NSString stringWithFormat:@"&time=%ld",unixTime]];
                
@@ -199,7 +205,7 @@
 
 - (void)clearLabel {
     [self.accesoLabel setText:@"Leer Entrada"];
-    [self.accesoLabel setTextColor:[UIColor whiteColor]];
+    [self.accesoLabel setTextColor:[UIColor blackColor]];
     [self.localizadorLabel setText:nil];
     [self.activityIndicator stopAnimating];
 }
@@ -231,6 +237,10 @@
     [device lockForConfiguration:nil]; //you must lock before setting torch mode
     [device setTorchMode:isOn ? AVCaptureTorchModeOn : AVCaptureTorchModeOff];
     [device unlockForConfiguration];
+}
+
+-(void) startReader {
+    [self.readerController.readerView start];
 }
 
 

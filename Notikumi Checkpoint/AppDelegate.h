@@ -7,9 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ScannerViewController.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+@property (strong) NSString * clave;
+@property (strong) NSString * purlev;
+@property () NSInteger vida;
+
+@property(nonatomic, retain) ScannerViewController *scannerViewController;
 
 @end

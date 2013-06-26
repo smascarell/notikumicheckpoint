@@ -11,7 +11,7 @@
 #import "NKListaEntradasViewController.h"
 
 @interface ScannerViewController : UIViewController <ZBarReaderDelegate>  {
-    ZBarReaderView *readerView;
+    UIView *readerView;
     ZBarReaderViewController *readerController;
     ZBarCameraSimulator *cameraSim;
     AVAudioPlayer *audioPlayer;
@@ -21,12 +21,14 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) NSMutableData *responseData;
 
-@property (nonatomic, retain) IBOutlet ZBarReaderView *readerView;
+@property (nonatomic, retain) IBOutlet UIView *readerView;
+@property (nonatomic, retain) ZBarReaderViewController *readerController;
 
 -(BOOL) validateQR :(NSString *)data;
-- (void) limpiarAccesoLabel;
-- (void) clearLabel;
-- (IBAction)cambiarEstadoLED:(id)sender;
-- (void) setTorchOn:(BOOL)isOn;
+-(void) limpiarAccesoLabel;
+-(void) clearLabel;
+-(IBAction)cambiarEstadoLED:(id)sender;
+-(void) setTorchOn:(BOOL)isOn;
+-(void) startReader;
 
 @end
